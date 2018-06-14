@@ -11,25 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nex3z.flowlayout.FlowLayout;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import pl.rekurencja.delta.R;
-import pl.rekurencja.delta.activities.MainActivity;
-import pl.rekurencja.delta.entities.Club;
-import pl.rekurencja.delta.enums.EClubResultTypes;
-import pl.rekurencja.delta.fragments.ShowClubFragment;
+
 import rekurencja.capthapl.laba.Entities.Event;
 
-public class ClubListAdapter extends BaseAdapter {
+public class EventListAdapter extends BaseAdapter {
 
     private Activity context_1;
 
     private ArrayList<Event> pairs;
 
-    public ClubListAdapter(Activity context,
+    public EventListAdapter(Activity context,
                             ArrayList<Event> pairs) {
         context_1 = context;
         this.pairs = pairs;
@@ -59,7 +54,6 @@ public class ClubListAdapter extends BaseAdapter {
                     R.layout.event_row, null);
 
             SetupViewHolder(viewHolder,convertView);
-            FillFlowLayout(position,viewHolder);
             convertView.setTag(viewHolder);
         } else
             viewHolder = (ViewHolder) convertView.getTag();
@@ -80,22 +74,29 @@ public class ClubListAdapter extends BaseAdapter {
     }
 
     private void FillViewHolderWithContent(ViewHolder viewHolder,int position){
-       // viewHolder.Title.setText(pairs.get(position).Name);
+        viewHolder.Title.setText(pairs.get(position).Title);
+        viewHolder.Ocena.setText(Integer.toString(pairs.get(position).VotesPositive));
+        viewHolder.Description.setText(pairs.get(position).Description);
+        viewHolder.Date.setText(pairs.get(position).DMYDate());
+        viewHolder.Logo.setImageResource(R.drawable.placeholder_event);
     }
 
 
 
     private void SetupViewHolder(ViewHolder viewHolder,View convertView){
-      //  viewHolder.Logo = (CircleImageView) convertView.findViewById(R.id.club_row_logo);
+        viewHolder.Logo = (CircleImageView) convertView.findViewById(R.id.profile_image);
+        viewHolder.Title = convertView.findViewById(R.id.event_title);
+        viewHolder.Ocena = convertView.findViewById(R.id.event_rating);
+        viewHolder.Description = convertView.findViewById(R.id.event_description);
+        viewHolder.Date = convertView.findViewById(R.id.event_date);
 
     }
 
     public class ViewHolder {
         public TextView Title;
         public TextView Ocena;
-        public ImageView Owner;
-        public FlowLayout FlowLayout;
+        public TextView Description;
         public CircleImageView Logo;
-        public TextView Members;
+        public TextView Date;
     }
 }

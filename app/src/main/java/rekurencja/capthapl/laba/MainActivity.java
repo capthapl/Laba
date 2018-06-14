@@ -1,10 +1,13 @@
 package rekurencja.capthapl.laba;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
+
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 
 import java.util.ArrayList;
@@ -20,17 +23,18 @@ import rekurencja.capthapl.laba.network.RequestManger;
 
 public class MainActivity extends Activity {
 
-    CompactCalendarView Calendar_;
+    CompactCalendarView Calendar;
     ImageButton CalendarButton;
     RequestManger Requests;
-    List<Event> Events = new ArrayList<>();
+    ArrayList<Event> Events = new ArrayList<>();
+    ListView EventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Calendar_ = findViewById(R.id.calendar);
+        Calendar = findViewById(R.id.calendar);
         CalendarButton = findViewById(R.id.calendar_button);
         Requests = new RequestManger();
         setupCalendarButton();
@@ -40,15 +44,19 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         printEvents();
+        EventList = findViewById(R.id.event_listview);
+        EventListAdapter adapter = new EventListAdapter(this,Events);
+        EventList.setAdapter(adapter);
+        setCalendarEvents();
     }
 
     private void setupCalendarButton(){
         CalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Calendar_.getVisibility()==View.GONE)
-                    Calendar_.setVisibility(View.VISIBLE);
-                else Calendar_.setVisibility(View.GONE);
+                if(Calendar.getVisibility()==View.GONE)
+                    Calendar.setVisibility(View.VISIBLE);
+                else Calendar.setVisibility(View.GONE);
             }
         });
     }
@@ -76,6 +84,14 @@ public class MainActivity extends Activity {
              String location = e.getLocation().getValue();
              Event tempEvent = new Event(eventId,date,title,description,location,imageUrl,positive,negative);
              Events.add(tempEvent);
+        }
+    }
+
+    private void setCalendarEvents(){
+        for(int i = 0;i<Events.size();i++) {
+            com.github.sundeepk.compactcalendarview.domain.Event event = new com.github.sundeepk.compactcalendarview.domain.Event(Color.BLUE,Events.get(i).Date.getTime());
+
+            Calendar.addEvent(event);
         }
     }
 

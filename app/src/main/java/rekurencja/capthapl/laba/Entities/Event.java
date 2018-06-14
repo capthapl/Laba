@@ -2,6 +2,7 @@ package rekurencja.capthapl.laba.Entities;
 
 import android.support.annotation.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Event {
@@ -25,5 +26,10 @@ public class Event {
         ImageUrl = imgUrl;
         VotesPositive = votesP;
         VotesNegative = votesN;
+    }
+    public String DMYDate(){
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy");
+        return ft.format(Date);
     }
 }

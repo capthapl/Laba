@@ -4,24 +4,23 @@
     android:layout_width="match_parent"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
-    android:layout_height="150dp"
+    android:layout_height="100dp"
     android:background="@drawable/rounded_container">
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/placeholder_event"
         android:layout_marginStart="10dp"
-        app:civ_border_width="3dp"
+        app:civ_border_width="2dp"
         app:civ_border_color="@color/bluePrimary"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="130dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical">
         <TextView
@@ -29,15 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:textAlignment="center"
-            android:text="Ruchanie w dupe"
             android:textColor="@color/grayText"
             android:textStyle="bold"/>
         <TextView
+            android:id="@+id/event_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:textAlignment="center"
-            android:text="Ruchanie w dupe test test fdsfsdfjsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsofijsdofijsdpfsjfpsjfpsjfpsjfpsfjpsfjspfjspf"
             android:maxLines="3"
             android:textSize="10sp"
             android:ellipsize="end"
@@ -51,22 +49,22 @@
             android:layout_height="25dp"
             android:src="@mipmap/calendar_gray_icon"/>
             <TextView
+                android:id="@+id/event_date"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:layout_weight="1"
                 android:textColor="@color/grayText"
                 android:textSize="15sp"
-                android:gravity="center_vertical"
-                android:text="20-10-1998"/>
+                android:gravity="center_vertical" />
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@mipmap/rating_gray_icon"/>
             <TextView
+                android:id="@+id/event_rating"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:textColor="@color/grayText"
-                android:text="5"/>
+                android:textColor="@color/grayText" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
