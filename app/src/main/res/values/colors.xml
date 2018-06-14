@@ -6,4 +6,6 @@
     <color name="transparent">#00000000</color>
     <color name="bluePrimary">#00a69b</color>
     <color name="primaryBg">#FFFFFF</color>
+    <color name="halfTransparentGray">#40444444</color>
+    <color name="grayText">#4C4C4C</color>
 </resources>
