@@ -22,11 +22,11 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:paddingTop="-2dp"
+                android:gravity="center_vertical"
                 android:text="@string/app_name"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
-                android:textSize="35dp" />
+                android:textSize="35sp" />
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
