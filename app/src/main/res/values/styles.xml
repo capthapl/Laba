@@ -11,5 +11,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">15dp</item>
     </style>
+    <style name="splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@drawable/ladowanie</item>
+    </style>
 
 </resources>
