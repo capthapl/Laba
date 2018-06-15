@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
     CompactCalendarView Calendar;
     ImageButton CalendarButton;
     ImageButton SortButton;
+    Button ShowAllEventsBtn;
     RequestManger Requests;
     ArrayList<Event> Events = new ArrayList<>();
     ListView EventList;
@@ -49,6 +50,8 @@ public class MainActivity extends Activity {
         Calendar = findViewById(R.id.calendar);
         CalendarButton = findViewById(R.id.calendar_button);
         SortContainer = findViewById(R.id.sort_container);
+        ShowAllEventsBtn = findViewById(R.id.show_all_events_btn);
+
         SortButton = findViewById(R.id.sort_button);
         ThisActivity = this;
         Requests = new RequestManger();
@@ -66,7 +69,13 @@ public class MainActivity extends Activity {
         setCalendarEvents();
         setupSortButton();
         setupSortOptions();
+        setupShowAllEventsButton();
+        setupCalendarEventClick();
+        Calendar.setCurrentSelectedDayBackgroundColor(Color.RED);
 
+    }
+
+    private void setupCalendarEventClick(){
         Calendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -81,6 +90,8 @@ public class MainActivity extends Activity {
                 if(restrictedEvents.size()>0){
                     adapter = new EventListAdapter(ThisActivity,restrictedEvents);
                     EventList.setAdapter(adapter);
+                    ShowAllEventsBtn.setVisibility(View.VISIBLE);
+                    Calendar.setVisibility(View.GONE);
                 }else{
                     Toast.makeText(ThisActivity,"Tego dnia nie ma żadnych wydarzeń",Toast.LENGTH_LONG).show();
                 }
@@ -91,7 +102,21 @@ public class MainActivity extends Activity {
 
             }
         });
+    }
 
+    private void setupShowAllEventsButton(){
+        ShowAllEventsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMainAdapter();
+                ShowAllEventsBtn.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void setMainAdapter(){
+        adapter = new EventListAdapter(ThisActivity,Events);
+        EventList.setAdapter(adapter);
     }
 
     private void setupCalendarButton(){
@@ -175,7 +200,6 @@ public class MainActivity extends Activity {
     private void ParseEvents() throws Exception{
         String ICS = DownloadICS();
         ICalendar ical = Biweekly.parse(ICS).first();
-        Log.d("XD",Integer.toString(ical.getEvents().size()));
         for(int i = 0;i<ical.getEvents().size();i++){
              VEvent e = ical.getEvents().get(i);
              int positive = Integer.parseInt(e.getExperimentalProperty("X-VOTES-POSITIVE").getValue());

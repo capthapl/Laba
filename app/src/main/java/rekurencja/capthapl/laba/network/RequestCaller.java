@@ -24,9 +24,9 @@ public class RequestCaller extends AsyncTask<String,Void,String> {
             String line;
             while ((line = rd.readLine()) != null) result.append(line+"\n");
             rd.close();
-            Log.d("XD",result.toString());
+            Log.d("Request:",result.toString());
             return result.toString();
-        }catch (Exception ex){Log.d("Exception",ex.getClass().getName());}
+        }catch (Exception ex){ex.printStackTrace();}
             return null;
     }
 
