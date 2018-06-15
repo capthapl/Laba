@@ -13,6 +13,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
     LinearLayout SortContainer;
     EventListAdapter adapter;
     Activity ThisActivity;
+    ImageView LoadingScreen;
     public static boolean first = true;
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -69,7 +71,7 @@ public class MainActivity extends Activity {
         CalendarButton = findViewById(R.id.calendar_button);
         SortContainer = findViewById(R.id.sort_container);
         ShowAllEventsBtn = findViewById(R.id.show_all_events_btn);
-
+        LoadingScreen = findViewById(R.id.loading_view);
         SortButton = findViewById(R.id.sort_button);
         ThisActivity = this;
         Requests = new RequestManger();
@@ -94,7 +96,7 @@ public class MainActivity extends Activity {
         setupShowAllEventsButton();
         setupCalendarEventClick();
         Calendar.setCurrentSelectedDayBackgroundColor(Color.RED);
-
+        LoadingScreen.setVisibility(View.GONE);
     }
 
     private void setupCalendarEventClick(){
