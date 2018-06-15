@@ -5,16 +5,21 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -34,16 +39,18 @@ public class MainActivity extends Activity {
     ArrayList<Event> Events = new ArrayList<>();
     ListView EventList;
     LinearLayout SortContainer;
+    EventListAdapter adapter;
+    Activity ThisActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Calendar = findViewById(R.id.calendar);
         CalendarButton = findViewById(R.id.calendar_button);
         SortContainer = findViewById(R.id.sort_container);
         SortButton = findViewById(R.id.sort_button);
+        ThisActivity = this;
         Requests = new RequestManger();
         setupCalendarButton();
         setupSortButton();
@@ -54,10 +61,36 @@ public class MainActivity extends Activity {
         }
         printEvents();
         EventList = findViewById(R.id.event_listview);
-        EventListAdapter adapter = new EventListAdapter(this,Events);
+        adapter = new EventListAdapter(this,Events);
         EventList.setAdapter(adapter);
         setCalendarEvents();
+        setupSortButton();
+        setupSortOptions();
 
+        Calendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+                SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy");
+                String formatedDate = ft.format(dateClicked);
+                ArrayList<Event> restrictedEvents = new ArrayList<Event>();
+                for(int i = 0;i<Events.size();i++){
+                    if(Events.get(i).DMYDate().equals(formatedDate)){
+                        restrictedEvents.add(Events.get(i));
+                    }
+                }
+                if(restrictedEvents.size()>0){
+                    adapter = new EventListAdapter(ThisActivity,restrictedEvents);
+                    EventList.setAdapter(adapter);
+                }else{
+                    Toast.makeText(ThisActivity,"Tego dnia nie ma żadnych wydarzeń",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+
+            }
+        });
 
     }
 
@@ -86,7 +119,51 @@ public class MainActivity extends Activity {
     }
 
     private void setupSortOptions(){
-        Button byName = findViewById()
+        Button byName = findViewById(R.id.sort_by_name);
+        Button byRating = findViewById(R.id.sort_by_rating);
+        Button byDate = findViewById(R.id.sort_by_date);
+
+        byRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(Events, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+                        return (o1.GetRating() - o2.GetRating())*-1; // Ascending
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                SortContainer.setVisibility(View.GONE);
+            }
+        });
+
+        byDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(Events, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+                        return (o2.Date.compareTo(o1.Date));
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                SortContainer.setVisibility(View.GONE);
+            }
+        });
+
+        byName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(Events, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+                        return (o2.Title.toLowerCase().compareTo(o1.Title.toLowerCase()));
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                SortContainer.setVisibility(View.GONE);
+            }
+        });
 
     }
 

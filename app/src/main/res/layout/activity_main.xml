@@ -42,7 +42,7 @@
         android:id="@+id/event_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="40dp">
     </ListView>
 
     <com.github.sundeepk.compactcalendarview.CompactCalendarView
@@ -57,7 +57,7 @@
         app:compactCalendarTargetHeight="200dp"
         app:compactCalendarTextSize="12sp"
         app:compactCalendarBackgroundColor="#00c1b4"
-        app:compactCalendarTextColor="#fff"
+        app:compactCalendarTextColor="#FFFFFF"
         app:compactCalendarCurrentDayIndicatorStyle="no_fill_large_indicator"
         app:compactCalendarCurrentSelectedDayIndicatorStyle="no_fill_large_indicator"
         app:compactCalendarEventIndicatorStyle="fill_large_indicator"
@@ -69,6 +69,7 @@
     android:layout_width="130dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:visibility="gone"
     android:layout_marginTop="40dp"
     android:layout_alignParentEnd="true">
     <TextView

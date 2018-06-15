@@ -32,4 +32,8 @@ public class Event {
                 new SimpleDateFormat ("dd.MM.yyyy");
         return ft.format(Date);
     }
+
+    public int GetRating(){
+        return VotesPositive-VotesNegative;
+    }
 }

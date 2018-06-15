@@ -75,7 +75,7 @@ public class EventListAdapter extends BaseAdapter {
 
     private void FillViewHolderWithContent(ViewHolder viewHolder,int position){
         viewHolder.Title.setText(pairs.get(position).Title);
-        viewHolder.Ocena.setText(Integer.toString(pairs.get(position).VotesPositive));
+        viewHolder.Ocena.setText(Integer.toString(pairs.get(position).GetRating()));
         viewHolder.Description.setText(pairs.get(position).Description);
         viewHolder.Date.setText(pairs.get(position).DMYDate());
         viewHolder.Logo.setImageResource(R.drawable.placeholder_event);
