@@ -9,6 +9,8 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,8 +22,10 @@ import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rekurencja.capthapl.laba.Entities.Event;
+import rekurencja.capthapl.laba.LoadedEvents.LoadedEvents;
 import rekurencja.capthapl.laba.network.ImageDownloader;
 import rekurencja.capthapl.laba.network.RequestCaller;
+import rekurencja.capthapl.laba.network.RequestCallerPOSTVote;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -34,6 +38,8 @@ public class EventActivity extends Activity {
     ImageButton NotificaitonButton;
     ImageButton SmsButton;
     ImageButton Map;
+    ImageButton LikeButton;
+    ImageButton DislikeButton;
     CircleImageView Logo;
     TextView Rating;
     static Event CurrentEvent;
@@ -64,6 +70,8 @@ public class EventActivity extends Activity {
         Map = findViewById(R.id.map_button);
         SmsButton = findViewById(R.id.sms_button);
         Rating = findViewById(R.id.rating_textview);
+        LikeButton = findViewById(R.id.like_button);
+        DislikeButton = findViewById(R.id.dislike_button);
     }
 
 
@@ -82,12 +90,55 @@ public class EventActivity extends Activity {
         }else Map.setVisibility(View.GONE);
     }
 
+    private void setupLikes(final Event event){
+        final Context thisContext = this;
+        final String android_id = Settings.Secure.getString(thisContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+
+            LikeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        final RequestCallerPOSTVote req = new RequestCallerPOSTVote();
+                        int res = req.execute(Integer.toString(event.EventId), Integer.toString(1), android_id).get();
+                        if(res==200){
+                            Toast.makeText(thisContext,"Pomyślnie zagłosowano",Toast.LENGTH_LONG).show();
+                            Rating.setText(Integer.toString(Integer.parseInt(Rating.getText().toString())+1));
+                        }else if(res==403){
+                            Toast.makeText(thisContext,"Zagłosowano już z tego urządzenia",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(thisContext,"Błąd po stronie serwera",Toast.LENGTH_LONG).show();
+                        }
+                    }catch (Exception ex){ex.printStackTrace();}
+                }
+            });
+
+            DislikeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        final RequestCallerPOSTVote req = new RequestCallerPOSTVote();
+                        int res = req.execute(Integer.toString(event.EventId), Integer.toString(-1), android_id).get();
+                        if(res==200){
+                            Toast.makeText(thisContext,"Pomyślnie zagłosowano",Toast.LENGTH_LONG).show();
+                            Rating.setText(Integer.toString(Integer.parseInt(Rating.getText().toString())-1));
+                        }else if(res==403){
+                            Toast.makeText(thisContext,"Zagłosowano już z tego urządzenia",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(thisContext,"Błąd po stronie serwera",Toast.LENGTH_LONG).show();
+                        }
+                    }catch (Exception ex){ex.printStackTrace();}
+                }
+            });
+
+    }
+
     private void BindText(){
         Event event;
         boolean found = false;
-        for(int i = 0;i<MainActivity.Events.size();i++){
-            if(MainActivity.Events.get(i).EventId == EventId){
-                event = MainActivity.Events.get(i);
+        for(int i = 0; i< LoadedEvents.Events.size(); i++){
+            if(LoadedEvents.Events.get(i).EventId == EventId){
+                event = LoadedEvents.Events.get(i);
                 CurrentEvent = event;
                 SetFields(event);
                 found = true;
@@ -122,6 +173,7 @@ public class EventActivity extends Activity {
         setupNotificationButton(event);
         setupSmsButton(event);
         setupMapButton(event);
+        setupLikes(event);
     }
 
     private void setupSmsButton(final Event event){

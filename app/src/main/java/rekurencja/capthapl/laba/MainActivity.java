@@ -2,10 +2,13 @@ package rekurencja.capthapl.laba;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -32,6 +36,7 @@ import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import rekurencja.capthapl.laba.Entities.Event;
+import rekurencja.capthapl.laba.LoadedEvents.LoadedEvents;
 import rekurencja.capthapl.laba.enums.ERequestTypes;
 import rekurencja.capthapl.laba.network.ImageDownloader;
 import rekurencja.capthapl.laba.network.RequestManger;
@@ -45,16 +50,43 @@ public class MainActivity extends Activity {
     ImageButton SortButton;
     Button ShowAllEventsBtn;
     RequestManger Requests;
-    public static ArrayList<Event> Events = new ArrayList<>();
     ListView EventList;
     LinearLayout SortContainer;
     EventListAdapter adapter;
     Activity ThisActivity;
     ImageView LoadingScreen;
-    public static boolean first = true;
+
+    public static boolean FirstOpen = true;
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(!FirstOpen) {
+            ArrayList<Event> refreshList = new ArrayList<>();
+            try {
+                ParseEvents(refreshList);
+
+                for (int i = 0; i < LoadedEvents.Events.size(); i++) {
+                    for (int x = 0; x < refreshList.size(); x++) {
+                        if (LoadedEvents.Events.get(i).EventId == refreshList.get(i).EventId) {
+                            LoadedEvents.Events.get(i).Title = refreshList.get(i).Title;
+                            LoadedEvents.Events.get(i).Description = refreshList.get(i).Description;
+                            LoadedEvents.Events.get(i).VotesNegative = refreshList.get(i).VotesNegative;
+                            LoadedEvents.Events.get(i).VotesPositive = refreshList.get(i).VotesPositive;
+                            break;
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -67,28 +99,39 @@ public class MainActivity extends Activity {
         );
 
         setContentView(R.layout.activity_main);
+        if(isOnline()) {
+            SetupAll();
+        }else{
+            TextView noConnText = findViewById(R.id.no_internet_info);
+            noConnText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void SetupAll(){
         Calendar = findViewById(R.id.calendar);
         CalendarButton = findViewById(R.id.calendar_button);
         SortContainer = findViewById(R.id.sort_container);
         ShowAllEventsBtn = findViewById(R.id.show_all_events_btn);
-        LoadingScreen = findViewById(R.id.loading_view);
         SortButton = findViewById(R.id.sort_button);
+        EventList = findViewById(R.id.event_listview);
         ThisActivity = this;
         Requests = new RequestManger();
+
         setupCalendarButton();
         setupSortButton();
-        if(first==true) {
-            try {
-                ParseEvents();
-                DownloadAndSetImages(Events);
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            if (FirstOpen == true) {//FIRST EVENT LOAD
+                Toast.makeText(this, "FIRST", Toast.LENGTH_LONG).show();
+                ParseEvents(LoadedEvents.Events);
+                DownloadAndSetImages(LoadedEvents.Events);
+                FirstOpen = false;
             }
-            first = false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         printEvents();
-        EventList = findViewById(R.id.event_listview);
-        adapter = new EventListAdapter(this,Events);
+
+        adapter = new EventListAdapter(this, LoadedEvents.Events);
         EventList.setAdapter(adapter);
         setCalendarEvents();
         setupSortButton();
@@ -96,7 +139,12 @@ public class MainActivity extends Activity {
         setupShowAllEventsButton();
         setupCalendarEventClick();
         Calendar.setCurrentSelectedDayBackgroundColor(Color.RED);
-        LoadingScreen.setVisibility(View.GONE);
+    }
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private void setupCalendarEventClick(){
@@ -106,9 +154,9 @@ public class MainActivity extends Activity {
                 SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy");
                 String formatedDate = ft.format(dateClicked);
                 ArrayList<Event> restrictedEvents = new ArrayList<Event>();
-                for(int i = 0;i<Events.size();i++){
-                    if(Events.get(i).DMYDate().equals(formatedDate)){
-                        restrictedEvents.add(Events.get(i));
+                for(int i = 0;i<LoadedEvents.Events.size();i++){
+                    if(LoadedEvents.Events.get(i).DMYDate().equals(formatedDate)){
+                        restrictedEvents.add(LoadedEvents.Events.get(i));
                     }
                 }
                 if(restrictedEvents.size()>0){
@@ -139,7 +187,7 @@ public class MainActivity extends Activity {
     }
 
     private void setMainAdapter(){
-        adapter = new EventListAdapter(ThisActivity,Events);
+        adapter = new EventListAdapter(ThisActivity,LoadedEvents.Events);
         EventList.setAdapter(adapter);
     }
 
@@ -175,7 +223,7 @@ public class MainActivity extends Activity {
         byRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collections.sort(Events, new Comparator<Event>() {
+                Collections.sort(LoadedEvents.Events, new Comparator<Event>() {
                     @Override
                     public int compare(Event o1, Event o2) {
                         return (o1.GetRating() - o2.GetRating())*-1; // Ascending
@@ -189,7 +237,7 @@ public class MainActivity extends Activity {
         byDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collections.sort(Events, new Comparator<Event>() {
+                Collections.sort(LoadedEvents.Events, new Comparator<Event>() {
                     @Override
                     public int compare(Event o1, Event o2) {
                         return (o2.Date.compareTo(o1.Date));
@@ -203,7 +251,7 @@ public class MainActivity extends Activity {
         byName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collections.sort(Events, new Comparator<Event>() {
+                Collections.sort(LoadedEvents.Events, new Comparator<Event>() {
                     @Override
                     public int compare(Event o1, Event o2) {
                         return (o2.Title.toLowerCase().compareTo(o1.Title.toLowerCase()));
@@ -221,7 +269,7 @@ public class MainActivity extends Activity {
         return Requests.GetResponse(ERequestTypes.GetEvents);
     }
 
-    private void ParseEvents() throws Exception{
+    private void ParseEvents(ArrayList<Event> events) throws Exception{
         String ICS = DownloadICS();
         ICalendar ical = Biweekly.parse(ICS).first();
         for(int i = 0;i<ical.getEvents().size();i++){
@@ -243,7 +291,7 @@ public class MainActivity extends Activity {
              String description = e.getSummary().getValue();
              String location = e.getLocation().getValue();
              Event tempEvent = new Event(eventId,date,title,description,location,imageUrl,positive,negative,url);
-             Events.add(tempEvent);
+             events.add(tempEvent);
         }
     }
 
@@ -268,15 +316,15 @@ public class MainActivity extends Activity {
 
 
     private void setCalendarEvents(){
-        for(int i = 0;i<Events.size();i++) {
-            com.github.sundeepk.compactcalendarview.domain.Event event = new com.github.sundeepk.compactcalendarview.domain.Event(Color.BLUE,Events.get(i).Date.getTime());
+        for(int i = 0;i<LoadedEvents.Events.size();i++) {
+            com.github.sundeepk.compactcalendarview.domain.Event event = new com.github.sundeepk.compactcalendarview.domain.Event(Color.BLUE,LoadedEvents.Events.get(i).Date.getTime());
 
             Calendar.addEvent(event);
         }
     }
 
     private void printEvents(){
-        for(Event i : Events){
+        for(Event i : LoadedEvents.Events){
             Log.d("Event: ",i.EventId + " "+i.Title+" "+i.Description+" "+i.Date.toString()+ " "+i.VotesPositive+" "+i.VotesNegative+" "+i.ImageUrl);
         }
     }

@@ -8,4 +8,5 @@
     </string-array>
     <string name="title_activity_event">EventActivity</string>
     <string name="title_activity_map_dialog">MapDialogActivity</string>
+    <string name="title_activity_loading">LoadingActivity</string>
 </resources>

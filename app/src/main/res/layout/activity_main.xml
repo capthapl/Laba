@@ -111,10 +111,15 @@
 
 </LinearLayout>
 
-<ImageView
-    android:id="@+id/loading_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:src="@drawable/loadingscreen"
-    android:scaleType="centerCrop"/>
+    <TextView
+        android:id="@+id/no_internet_info"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Brak połączenia z internetem.\nPodłącz się do sieci i zresetuj aplikacje."
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:textColor="#000000"/>
+
 </RelativeLayout>

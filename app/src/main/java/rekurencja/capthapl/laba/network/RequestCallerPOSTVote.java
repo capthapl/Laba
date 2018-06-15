@@ -3,58 +3,58 @@ package rekurencja.capthapl.laba.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class RequestCallerPOSTVote extends AsyncTask<String,Void,String> {
+public class RequestCallerPOSTVote extends AsyncTask<String,Void,Integer> {
     private static HttpURLConnection con;
+
     @Override
-    protected String doInBackground(String... strings) {
-        String url = "https://httpbin.org/post";
-        String urlParameters = "name=Jack&occupation=programmer";
-        String postData = "{   \"id\":"+strings[0]+",   \"vote\":"+strings[1]+",   \"device_id\":\""+strings[2]+"\", }\n";
-
+    protected Integer doInBackground(String... strings) {
         try {
+            String url_ = "https://tumskanova.pl/event/vote";
+            URL url = new URL(url_);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("x-api-token", "7fbczyjw7jOSzAUw9vj04lgYVWyjpY5w");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
 
-            URL myurl = new URL(url);
-            con = (HttpURLConnection) myurl.openConnection();
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("id", Integer.parseInt(strings[0]));
+            jsonParam.put("vote", Integer.parseInt(strings[1]));
+            jsonParam.put("device_id",strings[2]);
 
-            con.setDoOutput(true);
-            con.setRequestMethod("POST");
-            con.setRequestProperty("x-api-token", "7fbczyjw7jOSzAUw9vj04lgYVWyjpY5w");
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            Log.i("JSON", jsonParam.toString());
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+           // os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+            os.writeBytes(jsonParam.toString());
 
-            try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
-                wr.writeBytes(postData);
-            }
+            os.flush();
+            os.close();
 
-            StringBuilder content;
+            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+            Log.i("MSG", conn.getResponseMessage());
+            conn.disconnect();
+            return conn.getResponseCode();
 
-            try (BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()))) {
 
-                String line;
-                content = new StringBuilder();
+        } catch (Exception e) {
+            e.printStackTrace();
 
-                while ((line = in.readLine()) != null) {
-                    content.append(line);
-                    content.append(System.lineSeparator());
-                }
-            }
-
-            Log.d("Tag",content.toString());
-
-        }catch (Exception ex){}finally {
-
-            con.disconnect();
         }
-        return "";
+        return -1;
     }
+
 
 }
 

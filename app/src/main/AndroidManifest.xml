@@ -16,16 +16,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
+
             android:name=".MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter></activity>
         <activity
             android:name=".EventActivity"
             android:configChanges="orientation"
@@ -34,9 +33,9 @@
         <activity
             android:name=".MapDialogActivity"
             android:configChanges="orientation"
+            android:label="@string/title_activity_map_dialog"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Dialog"
-            android:label="@string/title_activity_map_dialog"/>
+            android:theme="@style/Theme.AppCompat.Dialog" />
     </application>
 
 </manifest>
