@@ -106,7 +106,30 @@ public class MainActivity extends Activity {
         }else{
             TextView noConnText = findViewById(R.id.no_internet_info);
             noConnText.setVisibility(View.VISIBLE);
+
+
+            Button Refresh = findViewById(R.id.refreshbutton);
+            Refresh.setVisibility(View.VISIBLE);
+            reloadinternet();
+
         }
+    }
+
+    public void reloadinternet(){
+
+        Button button= (Button)findViewById(R.id.refreshbutton);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this , MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
+
+
     }
 
     private void SetupAll(){

@@ -23,7 +23,7 @@ dependencies {
     implementation 'com.github.sundeepk:compact-calendar-view:2.0.2.3'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'net.sf.biweekly:biweekly:0.6.2'
-    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
