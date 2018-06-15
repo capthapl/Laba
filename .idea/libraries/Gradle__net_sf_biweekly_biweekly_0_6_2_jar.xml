@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: net.sf.biweekly:biweekly:0.6.2@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.biweekly/biweekly/0.6.2/8d28fc550def0ae498615b79e97edb35b7d17f10/biweekly-0.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.sf.biweekly/biweekly/0.6.2/cb31166d287fdc9b99ad045adac8be12e9395015/biweekly-0.6.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
