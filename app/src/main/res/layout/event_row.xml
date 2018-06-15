@@ -13,7 +13,7 @@
         android:layout_height="80dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
-        app:civ_border_width="2dp"
+        app:civ_border_width="1dp"
         app:civ_border_color="@color/bluePrimary"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,8 +26,9 @@
         <TextView
             android:id="@+id/event_title"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:textAlignment="center"
+            android:textSize="18sp"
             android:textColor="@color/grayText"
             android:textStyle="bold"/>
         <TextView
@@ -36,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textAlignment="center"
-            android:maxLines="3"
+            android:maxLines="1"
             android:textSize="10sp"
             android:ellipsize="end"
             android:textColor="#4C4C4C" />

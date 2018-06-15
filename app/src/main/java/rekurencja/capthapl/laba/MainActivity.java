@@ -1,6 +1,7 @@
 package rekurencja.capthapl.laba;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,8 @@ import biweekly.component.VEvent;
 import rekurencja.capthapl.laba.Entities.Event;
 import rekurencja.capthapl.laba.enums.ERequestTypes;
 import rekurencja.capthapl.laba.network.RequestManger;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends Activity {
 
@@ -44,8 +47,18 @@ public class MainActivity extends Activity {
     Activity ThisActivity;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/monte.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         setContentView(R.layout.activity_main);
         Calendar = findViewById(R.id.calendar);
         CalendarButton = findViewById(R.id.calendar_button);
