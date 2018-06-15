@@ -65,28 +65,30 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
-        if(!FirstOpen) {
-            ArrayList<Event> refreshList = new ArrayList<>();
-            try {
-                ParseEvents(refreshList);
+        if(isOnline()) {
+            if (!FirstOpen) {
+                ArrayList<Event> refreshList = new ArrayList<>();
+                try {
+                    ParseEvents(refreshList);
 
-                for (int i = 0; i < LoadedEvents.Events.size(); i++) {
-                    for (int x = 0; x < refreshList.size(); x++) {
-                        if (LoadedEvents.Events.get(i).EventId == refreshList.get(i).EventId) {
-                            LoadedEvents.Events.get(i).Title = refreshList.get(i).Title;
-                            LoadedEvents.Events.get(i).Description = refreshList.get(i).Description;
-                            LoadedEvents.Events.get(i).VotesNegative = refreshList.get(i).VotesNegative;
-                            LoadedEvents.Events.get(i).VotesPositive = refreshList.get(i).VotesPositive;
-                            break;
+                    for (int i = 0; i < LoadedEvents.Events.size(); i++) {
+                        for (int x = 0; x < refreshList.size(); x++) {
+                            if (LoadedEvents.Events.get(i).EventId == refreshList.get(i).EventId) {
+                                LoadedEvents.Events.get(i).Title = refreshList.get(i).Title;
+                                LoadedEvents.Events.get(i).Description = refreshList.get(i).Description;
+                                LoadedEvents.Events.get(i).VotesNegative = refreshList.get(i).VotesNegative;
+                                LoadedEvents.Events.get(i).VotesPositive = refreshList.get(i).VotesPositive;
+                                break;
+                            }
                         }
-                    }
 
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            adapter.notifyDataSetChanged();
         }
-        adapter.notifyDataSetChanged();
     }
 
     @Override
