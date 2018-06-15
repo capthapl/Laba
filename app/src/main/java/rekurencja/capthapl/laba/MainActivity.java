@@ -5,8 +5,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 
@@ -25,9 +29,11 @@ public class MainActivity extends Activity {
 
     CompactCalendarView Calendar;
     ImageButton CalendarButton;
+    ImageButton SortButton;
     RequestManger Requests;
     ArrayList<Event> Events = new ArrayList<>();
     ListView EventList;
+    LinearLayout SortContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +42,11 @@ public class MainActivity extends Activity {
 
         Calendar = findViewById(R.id.calendar);
         CalendarButton = findViewById(R.id.calendar_button);
+        SortContainer = findViewById(R.id.sort_container);
+        SortButton = findViewById(R.id.sort_button);
         Requests = new RequestManger();
         setupCalendarButton();
+        setupSortButton();
         try {
             ParseEvents();
         } catch (Exception e) {
@@ -48,6 +57,8 @@ public class MainActivity extends Activity {
         EventListAdapter adapter = new EventListAdapter(this,Events);
         EventList.setAdapter(adapter);
         setCalendarEvents();
+
+
     }
 
     private void setupCalendarButton(){
@@ -57,9 +68,28 @@ public class MainActivity extends Activity {
                 if(Calendar.getVisibility()==View.GONE)
                     Calendar.setVisibility(View.VISIBLE);
                 else Calendar.setVisibility(View.GONE);
+                SortContainer.setVisibility(View.GONE);
             }
         });
     }
+
+    private void setupSortButton(){
+        SortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SortContainer.getVisibility()==View.GONE)
+                    SortContainer.setVisibility(View.VISIBLE);
+                else SortContainer.setVisibility(View.GONE);
+                Calendar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void setupSortOptions(){
+        Button byName = findViewById()
+
+    }
+
 
     private String DownloadICS(){
         return Requests.GetResponse(ERequestTypes.GetEvents);

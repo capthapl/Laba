@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Laba</string>
+
+        <string-array name="sort_array">
+            <item>Nazwie</item>
+            <item>Ocenie</item>
+            <item>Dacie</item>
+        </string-array>
 </resources>
