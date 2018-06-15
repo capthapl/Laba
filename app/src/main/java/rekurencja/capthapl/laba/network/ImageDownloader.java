@@ -33,7 +33,20 @@ import java.net.URL;
     }
 
      private String SpaceEncone(String val){
-             val = val.replace(" ", "%20");
+                val = val.toLowerCase();
+                val = val.replace(" ", "%20");
+                val = val.replace("ę", "e");
+                val = val.replace("ó", "o");
+                val = val.replace("ą", "a");
+                val = val.replace("ś", "s");
+                val = val.replace("ł", "l");
+                val = val.replace("ż", "z");
+                val = val.replace("ź", "z");
+                val = val.replace("ć", "c");
+                val = val.replace("ń", "n");
+                if(val.contains("maps.googleapis")){
+                    val+="&keyAIzaSyBLlGPnBG9IyoSc4La4RwOXU7gZIOPDp8E";
+                }
          return val;
      }
 }

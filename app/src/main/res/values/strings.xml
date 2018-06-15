@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Laba</string>
 
-        <string-array name="sort_array">
-            <item>Nazwie</item>
-            <item>Ocenie</item>
-            <item>Dacie</item>
-        </string-array>
+    <string-array name="sort_array">
+        <item>Nazwie</item>
+        <item>Ocenie</item>
+        <item>Dacie</item>
+    </string-array>
+    <string name="title_activity_event">EventActivity</string>
+    <string name="title_activity_map_dialog">MapDialogActivity</string>
 </resources>

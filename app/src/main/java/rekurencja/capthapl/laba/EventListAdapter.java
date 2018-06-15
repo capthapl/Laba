@@ -1,6 +1,7 @@
 package rekurencja.capthapl.laba;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,13 +65,14 @@ public class EventListAdapter extends BaseAdapter {
 
 
     private void RedirectToClubPageHandler(View view, final int position){
-          /*  view.setOnClickListener(new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShowClubFragment.ClubId = pairs.get(position).Club_id;
-                    ((MainActivity)context_1).SetFragment(EClubResultTypes.ShowClub);
+                    Intent intent = new Intent(context_1,EventActivity.class);
+                    EventActivity.EventId = pairs.get(position).EventId;
+                    context_1.startActivity(intent);
                 }
-            });*/
+            });
     }
 
     private void FillViewHolderWithContent(ViewHolder viewHolder,int position){
@@ -78,7 +80,7 @@ public class EventListAdapter extends BaseAdapter {
         viewHolder.Ocena.setText(Integer.toString(pairs.get(position).GetRating()));
         viewHolder.Description.setText(pairs.get(position).Description);
         viewHolder.Date.setText(pairs.get(position).DMYDate());
-        viewHolder.Logo.setImageResource(R.drawable.placeholder_event);
+        viewHolder.Logo.setImageDrawable(pairs.get(position).Logo);
     }
 
 

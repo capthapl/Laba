@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="color" value="505450" />
+                                                <entry key="color" value="00a69b" />
                                                 <entry key="paddingPercent" value="10" />
                                               </map>
                                             </option>
@@ -35,7 +35,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_thumbs_up_down_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_link_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -46,7 +46,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="outputName" value="rating_gray_icon" />
+                                      <entry key="outputName" value="link_icon" />
                                     </map>
                                   </option>
                                 </PersistentState>

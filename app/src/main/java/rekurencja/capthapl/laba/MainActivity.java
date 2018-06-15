@@ -2,7 +2,10 @@ package rekurencja.capthapl.laba;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +32,7 @@ import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import rekurencja.capthapl.laba.Entities.Event;
 import rekurencja.capthapl.laba.enums.ERequestTypes;
+import rekurencja.capthapl.laba.network.ImageDownloader;
 import rekurencja.capthapl.laba.network.RequestManger;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -40,12 +44,12 @@ public class MainActivity extends Activity {
     ImageButton SortButton;
     Button ShowAllEventsBtn;
     RequestManger Requests;
-    ArrayList<Event> Events = new ArrayList<>();
+    public static ArrayList<Event> Events = new ArrayList<>();
     ListView EventList;
     LinearLayout SortContainer;
     EventListAdapter adapter;
     Activity ThisActivity;
-
+    public static boolean first = true;
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -59,6 +63,7 @@ public class MainActivity extends Activity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
         setContentView(R.layout.activity_main);
         Calendar = findViewById(R.id.calendar);
         CalendarButton = findViewById(R.id.calendar_button);
@@ -70,10 +75,14 @@ public class MainActivity extends Activity {
         Requests = new RequestManger();
         setupCalendarButton();
         setupSortButton();
-        try {
-            ParseEvents();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(first==true) {
+            try {
+                ParseEvents();
+                DownloadAndSetImages(Events);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            first = false;
         }
         printEvents();
         EventList = findViewById(R.id.event_listview);
@@ -215,6 +224,10 @@ public class MainActivity extends Activity {
         ICalendar ical = Biweekly.parse(ICS).first();
         for(int i = 0;i<ical.getEvents().size();i++){
              VEvent e = ical.getEvents().get(i);
+             Date today = new Date();
+
+             if(e.getDateStart().getValue().getTime() < today.getTime())
+                 continue;
              int positive = Integer.parseInt(e.getExperimentalProperty("X-VOTES-POSITIVE").getValue());
              int negative = Integer.parseInt(e.getExperimentalProperty("X-VOTES-NEGATIVE").getValue());
              int eventId = Integer.parseInt(e.getExperimentalProperty("X-EVENT-ID").getValue());
@@ -224,12 +237,33 @@ public class MainActivity extends Activity {
              }catch (NullPointerException ex){imageUrl = "null";}
              Date date = e.getDateStart().getValue();
              String title = e.getSummary().getValue();
+             String url = e.getUrl().getValue();
              String description = e.getSummary().getValue();
              String location = e.getLocation().getValue();
-             Event tempEvent = new Event(eventId,date,title,description,location,imageUrl,positive,negative);
+             Event tempEvent = new Event(eventId,date,title,description,location,imageUrl,positive,negative,url);
              Events.add(tempEvent);
         }
     }
+
+
+    public void DownloadAndSetImages(ArrayList<Event> events){
+        for(int i = 0;i<events.size();i++){
+            if(events.get(i).ImageUrl.equals("null")){
+                events.get(i).Logo = getResources().getDrawable(R.drawable.placeholder_event);
+            }else{
+                try {
+                    ImageDownloader d = new ImageDownloader();
+                    Bitmap b = d.execute(events.get(i).ImageUrl).get();
+                    events.get(i).Logo = new BitmapDrawable(getResources(),b);
+                }catch (Exception ex){
+                    events.get(i).Logo = getResources().getDrawable(R.drawable.placeholder_event);
+                }
+
+            }
+        }
+    }
+
+
 
     private void setCalendarEvents(){
         for(int i = 0;i<Events.size();i++) {

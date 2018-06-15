@@ -1,5 +1,9 @@
 package rekurencja.capthapl.laba.Entities;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
@@ -14,10 +18,12 @@ public class Event {
     public String Location;
     @Nullable
     public String ImageUrl;
+    public String URL;
     public int VotesPositive;
     public int VotesNegative;
+    public Drawable Logo;
 
-    public Event(int id,Date date,String title,String description,String location,String imgUrl,int votesP,int votesN){
+    public Event(int id,Date date,String title,String description,String location,String imgUrl,int votesP,int votesN,String url){
         EventId = id;
         Date = date;
         Title = title;
@@ -26,6 +32,7 @@ public class Event {
         ImageUrl = imgUrl;
         VotesPositive = votesP;
         VotesNegative = votesN;
+        URL = url;
     }
     public String DMYDate(){
         SimpleDateFormat ft =
@@ -33,6 +40,11 @@ public class Event {
         return ft.format(Date);
     }
 
+    public String DMYHMDate(){
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd.MM.yyyy 'o godzinie' HH:mm");
+        return ft.format(Date);
+    }
     public int GetRating(){
         return VotesPositive-VotesNegative;
     }
