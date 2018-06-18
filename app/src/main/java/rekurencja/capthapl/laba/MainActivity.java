@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
     EventListAdapter adapter;
     Activity ThisActivity;
     ImageView LoadingScreen;
+    public static int loaded = 0;
 
     public static boolean FirstOpen = true;
     @Override
@@ -103,6 +104,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         if(isOnline()) {
             SetupAll();
+            loaded = 1;
         }else{
             TextView noConnText = findViewById(R.id.no_internet_info);
             noConnText.setVisibility(View.VISIBLE);
@@ -146,7 +148,7 @@ public class MainActivity extends Activity {
         setupSortButton();
         try {
             if (FirstOpen == true) {//FIRST EVENT LOAD
-                Toast.makeText(this, "FIRST", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "FIRST", Toast.LENGTH_LONG).show();
                 ParseEvents(LoadedEvents.Events);
                 DownloadAndSetImages(LoadedEvents.Events);
                 FirstOpen = false;
@@ -164,6 +166,7 @@ public class MainActivity extends Activity {
         setupShowAllEventsButton();
         setupCalendarEventClick();
         Calendar.setCurrentSelectedDayBackgroundColor(Color.RED);
+
     }
     public boolean isOnline() {
         ConnectivityManager cm =
